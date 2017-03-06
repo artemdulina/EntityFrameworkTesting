@@ -1,46 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Configuration;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using ORM;
+using AutoMapper;
 using DAL;
+using DAL.Entities;
+using DAL.MapperProfiles;
+using ORM;
+using Bolt = ORM.Bolt;
 
 namespace EntityFrameworkTester
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            //Console.WriteLine(ConfigurationManager.AppSettings["mainconfig"]);
-            //Console.WriteLine(ConfigurationManager.AppSettings["extconfig"]);
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			Mapper.Initialize(cfg => cfg.AddProfile(new DalProfile()));
 
-            //NameValueCollection collection = (NameValueCollection)ConfigurationManager.GetSection("customSection");
-            //Console.WriteLine(collection["mainconfig"]);
-            //Console.WriteLine(collection["extconfig"]);
+			DataContext context = new DataContext();
+			BoltRepository boltRepository = new BoltRepository(context);
 
-            DataContext context = new DataContext();
-            CarRepository carRepository = new CarRepository(context);
+			Bolt bolt = boltRepository.Get(1);
+			Console.WriteLine(bolt.Name);
 
-            carRepository.DeleteAllRecords();
-            // carRepository.HardDeleteAllRecords();
+			DAL.Entities.Bolt dalBolt = Mapper.Map<Bolt, DAL.Entities.Bolt>(bolt);
 
-            List<Car> oldCars = new List<Car>();
-            for (int i = 0; i < 1000; i++)
-            {
-                oldCars.Add(new Car { Id = i, Name = "oldBugatti" + i, Price = 1000000 });
-            }
-            carRepository.AddRange(oldCars);
+			if (dalBolt.Wheel == null)
+			{
+				dalBolt.Wheel = new DAL.Entities.Wheel
+				{
+					Size = 1994
+				};
+			}
+			else
+			{
+				dalBolt.Wheel.Size = 199999;
+			}
 
-            List<Car> updatedCars = new List<Car>();
-            for (int j = 1000; j < 2000; j++)
-            {
-                updatedCars.Add(new Car { Id = j, Name = "updatedBugatti" + j, Price = 1000000 });
-            }
+			if (dalBolt.Wheel.Car == null)
+			{
+				dalBolt.Wheel.Car = new DAL.Entities.Car
+				{
+					Name = "Bugatti"
+				};
+			}
+			else
+			{
+				dalBolt.Wheel.Car.Name = "Audi";
+			}
 
-            carRepository.UpdateWith(updatedCars);
-        }
-    }
+			Bolt ormBolt = Mapper.Map<DAL.Entities.Bolt, Bolt>(dalBolt);
+
+			boltRepository.Update(ormBolt);
+		}
+	}
 }
