@@ -65,7 +65,7 @@ namespace DAL
 
 		public IEnumerable<Car> GetAll()
 		{
-			return context.Set<Car>().AsNoTracking();
+			return context.Set<Car>();
 		}
 
 		//much faster then simple RemoveRange

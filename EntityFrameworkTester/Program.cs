@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
 using DAL;
@@ -12,6 +13,10 @@ using ORM;
 
 namespace EntityFrameworkTester
 {
+	public static class New<T> where T : new()
+	{
+		public static readonly Func<T> Instance = Expression.Lambda<Func<T>>(Expression.New(typeof(T))).Compile();
+	}
 	public class A
 	{
 		public int X { get; set; }
@@ -52,15 +57,18 @@ namespace EntityFrameworkTester
 				Id = bolt.Id,
 				Name = bolt.Name,
 			};
+
 			return mappedBolt;
 		}
 		public static DAL.Entities.Wheel MapFrom(Wheel wheel)
 		{
+
 			DAL.Entities.Wheel mappedWheel = new DAL.Entities.Wheel
 			{
 				Id = wheel.Id,
 				Size = wheel.Size,
 			};
+
 			return mappedWheel;
 		}
 		public static DAL.Entities.Car MapFrom(Car car)
@@ -70,6 +78,7 @@ namespace EntityFrameworkTester
 				Id = car.Id,
 				Name = car.Name,
 			};
+
 			return mappedCar;
 		}
 		public static List<DAL.Entities.Bolt> MapFrom(List<Bolt> bolts)
@@ -105,21 +114,21 @@ namespace EntityFrameworkTester
 		public static List<DAL.Entities.Car> MapFrom(List<Car> cars)
 		{
 			List<DAL.Entities.Car> mappedCars = new List<DAL.Entities.Car>();
-			foreach (Car car in cars)
+			for (int i = 0; i < cars.Count; i++)
 			{
-				mappedCars.Add(MapFrom(car));
+				mappedCars.Add(MapFrom(cars[i]));
 				List<DAL.Entities.Wheel> wheels = new List<DAL.Entities.Wheel>();
-				foreach (Wheel carWheel in car.Wheels)
+				for (int j = 0; j < cars[i].Wheels.Count; j++)
 				{
-					wheels.Add(MapFrom(carWheel));
-					List<DAL.Entities.Bolt> bolts = new List<DAL.Entities.Bolt>();
-					foreach (Bolt carWheelBolt in carWheel.Bolts)
-					{
-						bolts.Add(MapFrom(carWheelBolt));
-					}
-					wheels.Last().Bolts = bolts;
+					wheels.Add(MapFrom(cars[i].Wheels[j]));
+					//List<DAL.Entities.Bolt> bolts = new List<DAL.Entities.Bolt>();
+					//foreach (Bolt bolt in wheel.Bolts)
+					//{
+					//	bolts.Add(MapFrom(bolt));
+					//}
+					//wheels[wheels.Count - 1].Bolts = bolts;
 				}
-				mappedCars.Last().Wheels = wheels;
+				mappedCars[mappedCars.Count - 1].Wheels = wheels;
 			}
 
 			return mappedCars;
@@ -153,14 +162,14 @@ namespace EntityFrameworkTester
 			//IEnumerable<DAL.Entities.Car> carsDal = Mapper.Map<IEnumerable<Car>, IEnumerable<DAL.Entities.Car>>(cars);
 			//timer.Stop();
 			//Console.WriteLine(timer.ElapsedMilliseconds + "ms");
-			//Console.WriteLine("Cars count: " + carsDal.Count());
+			//Console.WriteLine("Automapper.Cars count: " + carsDal.Count());//100sec
 
-			var timer = Stopwatch.StartNew();
-			List<Car> cars = carRepository.GetAll().ToList();
-			List<DAL.Entities.Car> carsDal = MapFrom(cars);
-			timer.Stop();
-			Console.WriteLine(timer.ElapsedMilliseconds + "ms");
-			Console.WriteLine("Cars count: " + carsDal.Count());
+			var timer2 = Stopwatch.StartNew();
+			List<Car> cars2 = carRepository.GetAll().ToList();
+			List<DAL.Entities.Car> carsDal2 = MapFrom(cars2);
+			timer2.Stop();
+			Console.WriteLine(timer2.ElapsedMilliseconds + "ms");
+			Console.WriteLine("Manual.Cars count: " + carsDal2.Count());//108sec
 
 			//Car car = carRepository.Get(1);
 			//DAL.Entities.Car dalCar = car.Adapt<DAL.Entities.Car>();

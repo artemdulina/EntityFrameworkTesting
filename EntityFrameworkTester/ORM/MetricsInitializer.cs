@@ -10,10 +10,10 @@ namespace ORM
 			base.Seed(context);
 
 			List<Car> carsToAdd = new List<Car>();
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < 200; i++)
 			{
 				List<Wheel> wheels = new List<Wheel>();
-				for (int j = 0; j < 400; j++)
+				for (int j = 0; j < 800; j++)
 				{
 					wheels.Add(new Wheel
 					{
