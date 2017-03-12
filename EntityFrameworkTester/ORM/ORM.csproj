@@ -70,9 +70,9 @@
     <Compile Include="Car.cs" />
     <Compile Include="DataContext.cs" />
     <Compile Include="MetricsInitializer.cs" />
-    <Compile Include="Migrations\201703062243116_Initial.cs" />
-    <Compile Include="Migrations\201703062243116_Initial.Designer.cs">
-      <DependentUpon>201703062243116_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201703072034391_Initial.cs" />
+    <Compile Include="Migrations\201703072034391_Initial.Designer.cs">
+      <DependentUpon>201703072034391_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,8 +89,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201703062243116_Initial.resx">
-      <DependentUpon>201703062243116_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201703072034391_Initial.resx">
+      <DependentUpon>201703072034391_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

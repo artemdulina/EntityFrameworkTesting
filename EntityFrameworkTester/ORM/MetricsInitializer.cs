@@ -9,11 +9,25 @@ namespace ORM
 		{
 			base.Seed(context);
 
-			context.Bolts.Add(new Bolt
+			List<Car> carsToAdd = new List<Car>();
+			for (int i = 0; i < 100; i++)
 			{
-				Name = "SuperBolt"
-			});
+				List<Wheel> wheels = new List<Wheel>();
+				for (int j = 0; j < 400; j++)
+				{
+					wheels.Add(new Wheel
+					{
+						Size = j
+					});
+				}
+				carsToAdd.Add(new Car
+				{
+					Name = "SuperBolt" + i,
+					Wheels = wheels
+				});
+			}
 
+			context.Cars.AddRange(carsToAdd);
 			context.SaveChanges();
 		}
 	}

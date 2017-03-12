@@ -11,10 +11,5 @@ namespace ORM
 		public virtual Car Car { get; set; }
 
 		public virtual List<Bolt> Bolts { get; set; }
-
-		public override string ToString()
-		{
-			return string.Format("Id = {0}, Size = {1}", Id, Size);
-		}
 	}
 }

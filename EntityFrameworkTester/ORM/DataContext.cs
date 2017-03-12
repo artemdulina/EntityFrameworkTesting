@@ -14,7 +14,7 @@ namespace ORM
 		public DbSet<Car> Cars { get; set; }
 
 		public DbSet<Wheel> Wheels { get; set; }
-
+	
 		public DbSet<Bolt> Bolts { get; set; }
 	}
 }

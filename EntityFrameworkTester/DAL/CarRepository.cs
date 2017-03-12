@@ -22,7 +22,7 @@ namespace DAL
 
 		public void Update(Car car)
 		{
-			context.UpdateGraph(car, map => map.OwnedCollection(c => c.Wheels));
+			context.UpdateGraph(car, map => map.OwnedCollection(c => c.Wheels, with => with.OwnedCollection(col => col.Bolts)));
 			context.SaveChanges();
 		}
 
@@ -65,8 +65,7 @@ namespace DAL
 
 		public IEnumerable<Car> GetAll()
 		{
-			IEnumerable<Car> cars = context.Set<Car>().ToList();
-			return cars;
+			return context.Set<Car>().AsNoTracking();
 		}
 
 		//much faster then simple RemoveRange
@@ -147,32 +146,32 @@ namespace DAL
 			context.SaveChanges();
 		}
 
-//		public void UpdateWithff(IEnumerable<Car> updatedCars)
-//		{
-//			using (var dbContextTransactions = context.Database.BeginTransaction())
-//			{
-//				IEnumerable<Car> carsToDelete = context.Set<Car>().ToList().Except(updatedCars, new CarsComparer());
+		//		public void UpdateWithff(IEnumerable<Car> updatedCars)
+		//		{
+		//			using (var dbContextTransactions = context.Database.BeginTransaction())
+		//			{
+		//				IEnumerable<Car> carsToDelete = context.Set<Car>().ToList().Except(updatedCars, new CarsComparer());
 
-//				foreach (var updatedCar in updatedCars)
-//				{
-//					context.Database.ExecuteSqlCommand(@"if exists (select Id from Cars where id = @nid)
-//                       update Cars
-//                         set Name = @name,Price=@price
-//                       where id = @nid
-//                    else
-//                       insert into Cars(Id, Name, Price)
-//                       values(@nid, @name, @price)",
-//					new SqlParameter("nid", updatedCar.Id),
-//					new SqlParameter("name", updatedCar.Name),
-//					new SqlParameter("price", updatedCar.Prices));
-//				}
+		//				foreach (var updatedCar in updatedCars)
+		//				{
+		//					context.Database.ExecuteSqlCommand(@"if exists (select Id from Cars where id = @nid)
+		//                       update Cars
+		//                         set Name = @name,Price=@price
+		//                       where id = @nid
+		//                    else
+		//                       insert into Cars(Id, Name, Price)
+		//                       values(@nid, @name, @price)",
+		//					new SqlParameter("nid", updatedCar.Id),
+		//					new SqlParameter("name", updatedCar.Name),
+		//					new SqlParameter("price", updatedCar.Prices));
+		//				}
 
-//				context.Set<Car>().RemoveRange(carsToDelete);
+		//				context.Set<Car>().RemoveRange(carsToDelete);
 
-//				context.SaveChanges();
-//				dbContextTransactions.Commit();
-//			}
-//		}
+		//				context.SaveChanges();
+		//				dbContextTransactions.Commit();
+		//			}
+		//		}
 
 		public void UpdateWiths(IEnumerable<Car> updatedCars)
 		{

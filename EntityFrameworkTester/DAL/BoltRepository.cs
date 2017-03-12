@@ -1,6 +1,8 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using EntityFramework.Extensions;
 using ORM;
-using RefactorThis.GraphDiff;
 
 namespace DAL
 {
@@ -20,8 +22,9 @@ namespace DAL
 
 		public void Update(Bolt bolt)
 		{
-			context.UpdateGraph(bolt, map => map.OwnedEntity(w => w.Wheel));
-			context.UpdateGraph(bolt.Wheel, map => map.OwnedEntity(w => w.Car));
+			//Wheel wheel = context.Set<Wheel>().Find(2);
+			//bolt.Wheel = wheel;
+			context.Set<Bolt>().Where(b => b.Name == "SuperBolt").Update(t => new Bolt { Name = "UpdatedBolt" });
 			context.SaveChanges();
 		}
 	}
